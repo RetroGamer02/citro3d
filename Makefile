@@ -9,8 +9,8 @@ endif
 include $(DEVKITARM)/3ds_rules
 
 export CITRO3D_MAJOR	:= 1
-export CITRO3D_MINOR	:= 7
-export CITRO3D_PATCH	:= 0
+export CITRO3D_MINOR	:= 6
+export CITRO3D_PATCH	:= 2
 
 VERSION	:=	$(CITRO3D_MAJOR).$(CITRO3D_MINOR).$(CITRO3D_PATCH)
 
@@ -21,6 +21,7 @@ VERSION	:=	$(CITRO3D_MAJOR).$(CITRO3D_MINOR).$(CITRO3D_PATCH)
 # DATA is a list of directories containing data files
 # INCLUDES is a list of directories containing header files
 #---------------------------------------------------------------------------------
+CTRULIB		:=	$(CURDIR)/libctru20
 TARGET		:=	citro3d
 SOURCES		:=	source source/maths
 DATA		:=	data
@@ -31,11 +32,11 @@ INCLUDES	:=	include
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
 
-CFLAGS	:=	-g -Wall -Wno-sizeof-array-div -Werror -mword-relocations \
+CFLAGS	:=	-g -Wall -Werror -Wno-error=sizeof-array-div -mword-relocations \
 			-ffunction-sections -fdata-sections \
 			$(ARCH) $(BUILD_CFLAGS)
 
-CFLAGS	+=	$(INCLUDE) -D__3DS__ -DCITRO3D_BUILD
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -D__3DS__ -DCITRO3D_BUILD
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 
@@ -114,7 +115,7 @@ debug:
 
 lib/libcitro3d.a : lib release $(SOURCES) $(INCLUDES)
 	@$(MAKE) BUILD=release OUTPUT=$(CURDIR)/$@ \
-	BUILD_CFLAGS="-DNDEBUG=1 -O2 -fomit-frame-pointer -fno-math-errno" \
+	BUILD_CFLAGS="-DNDEBUG=1 -O3 -fomit-frame-pointer -fno-math-errno -ffast-math" \
 	DEPSDIR=$(CURDIR)/release \
 	--no-print-directory -C release \
 	-f $(CURDIR)/Makefile

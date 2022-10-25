@@ -1,5 +1,5 @@
 #pragma once
-#if defined(__3DS__) || defined(_3DS)
+#ifdef _3DS
 #include <3ds.h>
 #else
 #include <stdbool.h>
